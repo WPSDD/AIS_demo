@@ -1,0 +1,43 @@
+m255
+K3
+13
+cModel Technology
+Z0 dD:\FPGA\src_code\prj_ex_5\sim
+vpad_test
+!i10b 1
+Z1 !s100 E;6D52VoSmDA5YdlW9?BW3
+Z2 Ia4RDTLkLm4:6nf2X:>97g0
+Z3 V<2;So?_OcHCabd=[Ma^0J3
+Z4 dD:\AIS_demo\modelsim_sim\anti_padding\sim
+Z5 w1576565526
+Z6 8D:/AIS_demo/modelsim_sim/anti_padding/design/pad_test.v
+Z7 FD:/AIS_demo/modelsim_sim/anti_padding/design/pad_test.v
+L0 1
+Z8 OV;L;10.1d;51
+r1
+!s85 0
+31
+!s108 1576565914.642000
+!s107 D:/AIS_demo/modelsim_sim/anti_padding/design/pad_test.v|
+Z9 !s90 -reportprogress|300|-work|work|D:/AIS_demo/modelsim_sim/anti_padding/design/pad_test.v|
+!s101 -O0
+Z10 o-work work -O0
+vtb_pad_test
+Z11 !s100 7GDoFETQh;0kNmDKXZk>72
+Z12 IlW21U@z=J1nn@K;oiVkO40
+Z13 V=UIWz]DIfCU=O;@iHMejV1
+R4
+Z14 w1576565424
+Z15 8D:/AIS_demo/modelsim_sim/anti_padding/sim/tb_pad_test.v
+Z16 FD:/AIS_demo/modelsim_sim/anti_padding/sim/tb_pad_test.v
+L0 2
+R8
+r1
+31
+Z17 !s90 -reportprogress|300|-work|work|D:/AIS_demo/modelsim_sim/anti_padding/sim/tb_pad_test.v|
+R10
+!i10b 1
+!s85 0
+Z18 !s108 1576565914.467000
+Z19 !s107 D:/AIS_demo/modelsim_sim/anti_padding/sim/tb_pad_test.v|
+!s101 -O0

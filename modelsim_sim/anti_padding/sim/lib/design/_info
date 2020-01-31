@@ -1,0 +1,24 @@
+m255
+K3
+13
+cModel Technology
+Z0 dD:\AIS_demo\modelsim_sim\anti_padding\sim
+vpad_test
+!i10b 1
+!s100 f8l@aPKVP]0XE:MFKV^VM1
+In5]:Ub0B_Gm:ZDYK7I;?b3
+V<2;So?_OcHCabd=[Ma^0J3
+Z1 dD:\AIS_demo\modelsim_sim\anti_padding\sim
+w1576565526
+8./../design/pad_test.v
+F./../design/pad_test.v
+L0 1
+OV;L;10.1d;51
+r1
+!s85 0
+31
+!s108 1576733786.595000
+!s107 ./../design/pad_test.v|
+!s90 -reportprogress|300|-work|design|./../design/pad_test.v|
+!s101 -O0
+o-work design -O0

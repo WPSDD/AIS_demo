@@ -1,0 +1,15 @@
+|pad_test
+sclk => flag~reg0.CLK
+sclk => state~6.DATAIN
+rst_n => flag~reg0.ACLR
+rst_n => state~8.DATAIN
+data_pad => always1.IN0
+data_pad => state.DATAB
+data_pad => state.DATAB
+data_pad => state.DATAB
+data_pad => state.DATAB
+data_pad => state.DATAB
+data_pad => Selector0.IN1
+flag <= flag~reg0.DB_MAX_OUTPUT_PORT_TYPE
+
+

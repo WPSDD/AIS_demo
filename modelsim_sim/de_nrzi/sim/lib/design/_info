@@ -1,0 +1,24 @@
+m255
+K3
+13
+cModel Technology
+Z0 dD:\AIS_demo\modelsim_sim\de_nrzi\sim
+vdenrzi
+!i10b 1
+!s100 6f]O8fOG5XL7hYL@WV<lI3
+IcdjQDKGM9g99aI3kH^b8A0
+V5Yc4XQT8?FMcjMl7cl:I^1
+Z1 dD:\AIS_demo\modelsim_sim\de_nrzi\sim
+w1576730375
+8./../design/denrzi.v
+F./../design/denrzi.v
+L0 1
+OV;L;10.1d;51
+r1
+!s85 0
+31
+!s108 1576731472.310000
+!s107 ./../design/denrzi.v|
+!s90 -reportprogress|300|-work|design|./../design/denrzi.v|
+!s101 -O0
+o-work design -O0

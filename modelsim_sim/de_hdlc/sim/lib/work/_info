@@ -1,0 +1,24 @@
+m255
+K3
+13
+cModel Technology
+Z0 dD:\AIS_demo\modelsim_sim\de_hdlc\sim
+vtb_dehdlc
+!i10b 1
+!s100 JGWnz5?W>0Shi1;oF[i7F2
+I0N<TW7Je_j5eTVh?[=XIm0
+Vd^lhlYZl^A<V][z=@L@c`2
+Z1 dD:\AIS_demo\modelsim_sim\de_hdlc\sim
+w1576745039
+8./tb_dehdlc.v
+F./tb_dehdlc.v
+L0 2
+OV;L;10.1d;51
+r1
+!s85 0
+31
+!s108 1576745049.734000
+!s107 ./tb_dehdlc.v|
+!s90 -reportprogress|300|-work|base_space|./tb_dehdlc.v|
+!s101 -O0
+o-work base_space -O0
