@@ -33,7 +33,7 @@ set(gca, 'xtick', -inf:inf:inf, 'Ytick', [-1 0 1], 'fontsize', 10);
 ylabel('NRZI后');
 title('GMSK调制解调过程信号波形');  set(get(gca, 'title'), 'FontSize', 13);
 subplot('position', [0.1 0.58 0.8 0.16]);
-plot(1000*t, gi(3*N_sample+1:end-3*N_sample), 'LineWidth', 1);  ylim([1.5*min(gi) 1.5*max(gi)]);
+plot(1000*t, gi, 'LineWidth', 1);  ylim([1.5*min(gi) 1.5*max(gi)]);
 set(gca,'xtick', -inf:inf:inf,'Ytick', 0 , 'fontsize', 10);  
 set(gca, 'YtickLabel', '0');
 ylabel('高斯滤波后');

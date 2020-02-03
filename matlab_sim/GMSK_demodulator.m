@@ -65,7 +65,7 @@ f_de = [zeros(1, N_sample_rcv) I_de(1:end-N_sample_rcv)] .* Q_de -...
 %% ------------------------------时延估计-----------------------------
 loc = reshape([zeros(1, 6); zeros(1, 6); ones(1, 6); ones(1, 6)], 1, 24);       %本地训练序列
 loc = 2 * kron(loc, ones(1, N_sample_rcv)) - 1;                                 %上采样
-[xcorr_data, move_num] = xcorr(f_de, [zeros(1, 8.5*N_sample_rcv) loc], 'none'); %求本地训练序列与信号的互相关函数(8.5bit移位？)
+[xcorr_data, move_num] = xcorr(f_de, [zeros(1, 8*N_sample_rcv) loc], 'none');   %求本地训练序列与信号的互相关函数
 [~, max_num] = max(xcorr_data);                                                 %互相关函数最大值下标
 delay_num = move_num(max_num);                                                  %估计时延的采样点数
 delay_est = delay_num * dt_rcv;                                                 %时延估计值

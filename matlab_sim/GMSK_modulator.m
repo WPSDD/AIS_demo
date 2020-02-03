@@ -19,8 +19,8 @@ h_gauss = sqrt(pi)/alpha*exp(-(pi*t_gauss/alpha).^2);   %滤波器冲激响应函数
 gi = conv(data_sample/Tb, h_gauss) * dt;                %计算卷积产生高斯脉冲信号
 
 %% ------------------------------MSK调制-----------------------------
-phi = pi*h*dt*cumsum(gi');                          %求和代替积分，求相位函数
-phi = phi(3*N_sample+1:end-3*N_sample)';            %将相位函数截取在仿真的时间范围
+gi = gi(3*N_sample+1:end-3*N_sample)';              %将高斯脉冲信号截取在仿真的时间范围
+phi = pi*h*dt*cumsum(gi)';                          %求和代替积分，求相位函数
 I_t = cos(phi);                                     %信号的同相分量
 Q_t = sin(phi);                                     %信号的正交分量
 gmsk = I_t.*cos(2*pi*fc*t) - Q_t.*sin(2*pi*fc*t);   %GMSK调制信号
