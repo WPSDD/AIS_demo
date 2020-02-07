@@ -22,7 +22,7 @@ function varargout = AIS_gui(varargin)
 
 % Edit the above text to modify the response to help AIS_gui
 
-% Last Modified by GUIDE v2.5 10-Dec-2019 17:16:55
+% Last Modified by GUIDE v2.5 07-Feb-2020 14:08:29
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -103,7 +103,7 @@ function pushbutton2_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 global f_sample fc dt N_sample b_num I_t Q_t t
 % ------------------------------数字下变频-----------------------------
-f_dpl = 4000 * (2*rand-1);                  %多普勒频移，范围一般在4kHz以内
+f_dpl = str2double(get(handles.edit6, 'string')) * 1000;                %多普勒频移，范围一般在4kHz以内
 gmsk_dpl = I_t.*cos(2*pi*(fc+f_dpl)*t)...
            - Q_t.*sin(2*pi*(fc+f_dpl)*t);   %卫星相对接收机运动产生多普勒频移
 gmsk_rcv = awgn(gmsk_dpl, str2double(get(handles.edit1, 'string')), 'measured');  %信号经过AWGN信道的信噪比
@@ -462,10 +462,12 @@ set(gca, 'xtick', -inf:inf:inf, 'Ytick', [0 1], 'fontsize', 7);
 set(handles.text16, 'string', '反填充后');
 axes(handles.axes6)
 plot(1000*t(1:168*N_sample), kron(data_out(1:168), ones(1, N_sample)), 'LineWidth', 0.7);  
-xlim([0 27]);  ylim([-0.2 1.2]);  xlabel('时间/ms');
+xlim([0 27]);  ylim([-0.2 1.2]);
 set(gca, 'Ytick', [0 1], 'Xtick', [0 5 10 15 20 25],  'fontsize', 7);  
 set(handles.text13, 'string', '解调出的数据');
-
+set(handles.text23, 'string', '时间/ms');
+set(handles.text21, 'string', ['频偏估计值: ', num2str(f_dpl/1000), 'kHz']);
+set(handles.text22, 'string', ['时延估计值: ', num2str(1000*delay_est), 'ms']);
 
 function edit1_Callback(hObject, eventdata, handles)
 % hObject    handle to edit1 (see GCBO)
@@ -605,9 +607,12 @@ set(gca, 'xtick', -inf:inf:inf, 'Ytick', [-1 0 1], 'fontsize', 7);
 set(handles.text16, 'string', 'Q支路');
 axes(handles.axes6)
 plot(1000*t, gmsk, 'LineWidth', 0.7);  
-xlim([0 27]);  ylim([-1.3 1.3]);  xlabel('时间/ms')
+xlim([0 27]);  ylim([-1.3 1.3]);
 set(gca, 'Ytick', [-1 0 1], 'Xtick', [0 5 10 15 20 25], 'fontsize', 7);  
 set(handles.text13, 'string', 'GMSK调制后');
+set(handles.text23, 'string', '时间/ms');
+set(handles.text21, 'string', ' ');
+set(handles.text22, 'string', ' ');
 
 
 
@@ -676,4 +681,73 @@ function edit5_CreateFcn(hObject, eventdata, handles)
 %       See ISPC and COMPUTER.
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on slider movement.
+function slider3_Callback(hObject, eventdata, handles)
+% hObject    handle to slider3 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'Value') returns position of slider
+%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
+var_t = get(handles.slider3, 'value');
+set(handles.edit3, 'string', num2str(var_t));
+
+% --- Executes during object creation, after setting all properties.
+function slider3_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to slider3 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: slider controls usually have a light gray background.
+if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor',[.9 .9 .9]);
+end
+
+
+
+function edit6_Callback(hObject, eventdata, handles)
+% hObject    handle to edit6 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit6 as text
+%        str2double(get(hObject,'String')) returns contents of edit6 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function edit6_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit6 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on slider movement.
+function slider4_Callback(hObject, eventdata, handles)
+% hObject    handle to slider4 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'Value') returns position of slider
+%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
+var_f = get(handles.slider4, 'value');
+set(handles.edit6, 'string', num2str(var_f));
+
+% --- Executes during object creation, after setting all properties.
+function slider4_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to slider4 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: slider controls usually have a light gray background.
+if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor',[.9 .9 .9]);
 end
