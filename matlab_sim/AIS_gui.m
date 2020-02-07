@@ -102,127 +102,127 @@ function pushbutton2_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 global f_sample fc dt N_sample b_num I_t Q_t t
-% ------------------------------Êı×ÖÏÂ±äÆµ-----------------------------
-f_dpl = str2double(get(handles.edit6, 'string')) * 1000;                %¶àÆÕÀÕÆµÒÆ£¬·¶Î§Ò»°ãÔÚ4kHzÒÔÄÚ
+% ------------------------------æ•°å­—ä¸‹å˜é¢‘-----------------------------
+f_dpl = str2double(get(handles.edit6, 'string')) * 1000;                %å¤šæ™®å‹’é¢‘ç§»ï¼ŒèŒƒå›´ä¸€èˆ¬åœ¨4kHzä»¥å†…
 gmsk_dpl = I_t.*cos(2*pi*(fc+f_dpl)*t)...
-           - Q_t.*sin(2*pi*(fc+f_dpl)*t);   %ÎÀĞÇÏà¶Ô½ÓÊÕ»úÔË¶¯²úÉú¶àÆÕÀÕÆµÒÆ
-gmsk_rcv = awgn(gmsk_dpl, str2double(get(handles.edit1, 'string')), 'measured');  %ĞÅºÅ¾­¹ıAWGNĞÅµÀµÄĞÅÔë±È
-fc1 = 17.975e6;                             %½ÓÊÕ»úAD×ª»»ºóµÄÊı¾İ²ÉÑùÂÊÎª48MHz£¬ÔØ²¨±»°áÒÆµ½17.975MHz´¦
+           - Q_t.*sin(2*pi*(fc+f_dpl)*t);   %å«æ˜Ÿç›¸å¯¹æ¥æ”¶æœºè¿åŠ¨äº§ç”Ÿå¤šæ™®å‹’é¢‘ç§»
+gmsk_rcv = awgn(gmsk_dpl, str2double(get(handles.edit1, 'string')), 'measured');  %ä¿¡å·ç»è¿‡AWGNä¿¡é“çš„ä¿¡å™ªæ¯”
+fc1 = 17.975e6;                             %æ¥æ”¶æœºADè½¬æ¢åçš„æ•°æ®é‡‡æ ·ç‡ä¸º48MHzï¼Œè½½æ³¢è¢«æ¬ç§»åˆ°17.975MHzå¤„
 
-%¶ş½×Ñ­»·ÀÛ»ıÁ¿·¨¹À¼ÆÆµÆ«
-fft_gmsk2 = abs(fft(gmsk_rcv.^2));                                  %ĞÅºÅÆ½·½µÄÆµÆ×
-f_gmsk2 = 0:f_sample/length(t):f_sample*(length(t)-1)/length(t);    %FFTÆµÂÊÖá
-fft_gmsk2(1:N_sample*b_num/2) = 0;                                  %È¥³ıÖ±Á÷·ÖÁ¿¼°¾µÆµ
-f1x2_index = find(fft_gmsk2 == max(fft_gmsk2));                     %µÚÒ»¸ö·åÖµµã
-f1x2 = f_gmsk2(f1x2_index);                                         %ÂëÔªÆµÂÊf1µÄÁ½±¶
+%äºŒé˜¶å¾ªç¯ç´¯ç§¯é‡æ³•ä¼°è®¡é¢‘å
+fft_gmsk2 = abs(fft(gmsk_rcv.^2));                                  %ä¿¡å·å¹³æ–¹çš„é¢‘è°±
+f_gmsk2 = 0:f_sample/length(t):f_sample*(length(t)-1)/length(t);    %FFTé¢‘ç‡è½´
+fft_gmsk2(1:N_sample*b_num/2) = 0;                                  %å»é™¤ç›´æµåˆ†é‡åŠé•œé¢‘
+f1x2_index = find(fft_gmsk2 == max(fft_gmsk2));                     %ç¬¬ä¸€ä¸ªå³°å€¼ç‚¹
+f1x2 = f_gmsk2(f1x2_index);                                         %ç å…ƒé¢‘ç‡f1çš„ä¸¤å€
 fft_gmsk2(f1x2_index) = 0;
-f2x2_index = find(fft_gmsk2 == max(fft_gmsk2));                     %µÚ¶ş¸ö·åÖµµã
-f2x2 = f_gmsk2(f2x2_index);                                         %ÂëÔªÆµÂÊf2µÄÁ½±¶
-f_dpl_est = (f1x2 + f2x2) / 4 - fc1;                                %¶àÆÕÀÕÆµÒÆ¹À¼ÆÖµ
+f2x2_index = find(fft_gmsk2 == max(fft_gmsk2));                     %ç¬¬äºŒä¸ªå³°å€¼ç‚¹
+f2x2 = f_gmsk2(f2x2_index);                                         %ç å…ƒé¢‘ç‡f2çš„ä¸¤å€
+f_dpl_est = (f1x2 + f2x2) / 4 - fc1;                                %å¤šæ™®å‹’é¢‘ç§»ä¼°è®¡å€¼
 
-%²úÉúÁ½Â·Õı½»Òò×Ó½øĞĞÏÂ±äÆµ
-cn = cos(2*pi*(fc1+f_dpl_est)*t);           %Í¬Ïà·ÖÁ¿µÄÏÂ±äÆµÕı½»Òò×Ó
-sn = sin(2*pi*(fc1+f_dpl_est)*t);           %Õı½»·ÖÁ¿µÄÏÂ±äÆµÕı½»Òò×Ó
-In = gmsk_rcv .* cn;                        %Í¬Ïà·ÖÁ¿ÏÂ±äÆµ
-Qn = - gmsk_rcv .* sn;                      %Õı½»·ÖÁ¿ÏÂ±äÆµ
-r1 = 25;  r2 = 5;  r3 = 5;                  %³éÈ¡Òò×Ó
+%äº§ç”Ÿä¸¤è·¯æ­£äº¤å› å­è¿›è¡Œä¸‹å˜é¢‘
+cn = cos(2*pi*(fc1+f_dpl_est)*t);           %åŒç›¸åˆ†é‡çš„ä¸‹å˜é¢‘æ­£äº¤å› å­
+sn = sin(2*pi*(fc1+f_dpl_est)*t);           %æ­£äº¤åˆ†é‡çš„ä¸‹å˜é¢‘æ­£äº¤å› å­
+In = gmsk_rcv .* cn;                        %åŒç›¸åˆ†é‡ä¸‹å˜é¢‘
+Qn = - gmsk_rcv .* sn;                      %æ­£äº¤åˆ†é‡ä¸‹å˜é¢‘
+r1 = 25;  r2 = 5;  r3 = 5;                  %æŠ½å–å› å­
 
-% CICÂË²¨£¬½µµÍÊı¾İ²ÉÑùÂÊ
-hm = dsp.CICDecimator(r1);                  %Éú³ÉCICÂË²¨Æ÷,25±¶³éÈ¡
-In_cic = hm(In')';                          %IÖ§Â·ÂË²¨³éÈ¡
-Qn_cic = hm(Qn')';                          %QÖ§Â·ÂË²¨³éÈ¡
+% CICæ»¤æ³¢ï¼Œé™ä½æ•°æ®é‡‡æ ·ç‡
+hm = dsp.CICDecimator(r1);                  %ç”ŸæˆCICæ»¤æ³¢å™¨,25å€æŠ½å–
+In_cic = hm(In')';                          %Iæ”¯è·¯æ»¤æ³¢æŠ½å–
+Qn_cic = hm(Qn')';                          %Qæ”¯è·¯æ»¤æ³¢æŠ½å–
 
-% Á½¼¶FIRÂË²¨Æ÷Éè¼Æ
-Fs1 = f_sample/r1;          Fs2 = Fs1/r2;               % Êı¾İ²ÉÑùÂÊ
-Fpass1 = 35000;             Fpass2 = 10000;             % Í¨´øÆµÂÊ
-Fstop1 = Fs1/(2*r2);        Fstop2 = Fs2/(2*r3);        % ×è´øÆµÂÊ
-Dpass1 = 0.057501127785;    Dpass2 = 0.17099735734;     % Í¨´ø²¨ÎÆ1dBºÍ3dB
-Dstop = 0.0056234132519;                                % ×è´ø²¨ÎÆ45dB
+% ä¸¤çº§FIRæ»¤æ³¢å™¨è®¾è®¡
+Fs1 = f_sample/r1;          Fs2 = Fs1/r2;               % æ•°æ®é‡‡æ ·ç‡
+Fpass1 = 35000;             Fpass2 = 10000;             % é€šå¸¦é¢‘ç‡
+Fstop1 = Fs1/(2*r2);        Fstop2 = Fs2/(2*r3);        % é˜»å¸¦é¢‘ç‡
+Dpass1 = 0.057501127785;    Dpass2 = 0.17099735734;     % é€šå¸¦æ³¢çº¹1dBå’Œ3dB
+Dstop = 0.0056234132519;                                % é˜»å¸¦æ³¢çº¹45dB
 dens  = 20;               
 [N1, Fo1, Ao1, W1] = firpmord([Fpass1, Fstop1]/(Fs1/2), [1 0], [Dpass1, Dstop]);
 [N2, Fo2, Ao2, W2] = firpmord([Fpass2, Fstop2]/(Fs2/2), [1 0], [Dpass2, Dstop]);
-b1  = firpm(N1, Fo1, Ao1, W1, {dens});                  % µÚÒ»¼¶ÂË²¨Æ÷ÏµÊı
-b2  = firpm(N2, Fo2, Ao2, W2, {dens});                  % µÚ¶ş¼¶ÂË²¨Æ÷ÏµÊı
+b1  = firpm(N1, Fo1, Ao1, W1, {dens});                  % ç¬¬ä¸€çº§æ»¤æ³¢å™¨ç³»æ•°
+b2  = firpm(N2, Fo2, Ao2, W2, {dens});                  % ç¬¬äºŒçº§æ»¤æ³¢å™¨ç³»æ•°
 
-%Á½¼¶FIRÂË²¨£¬·ÖÁ½¼¶ÒÔ½µµÍÂË²¨Æ÷½×Êı
-In_fir1 = filter(b1, 1, In_cic);   In_fir1 = In_fir1(1:r2:end);    %µÚÒ»¼¶FIRÂË²¨³éÈ¡
+%ä¸¤çº§FIRæ»¤æ³¢ï¼Œåˆ†ä¸¤çº§ä»¥é™ä½æ»¤æ³¢å™¨é˜¶æ•°
+In_fir1 = filter(b1, 1, In_cic);   In_fir1 = In_fir1(1:r2:end);    %ç¬¬ä¸€çº§FIRæ»¤æ³¢æŠ½å–
 Qn_fir1 = filter(b1, 1, Qn_cic);   Qn_fir1 = Qn_fir1(1:r2:end);
-In_fir2 = filter(b2, 1, In_fir1);  In_fir2 = In_fir2(1:r3:end);    %µÚ¶ş¼¶FIRÂË²¨³éÈ¡
+In_fir2 = filter(b2, 1, In_fir1);  In_fir2 = In_fir2(1:r3:end);    %ç¬¬äºŒçº§FIRæ»¤æ³¢æŠ½å–
 Qn_fir2 = filter(b2, 1, Qn_fir1);  Qn_fir2 = Qn_fir2(1:r3:end);
 I_de0 = In_fir2;
 Q_de0 = Qn_fir2;
 
 
-% ------------------------------1bit²î·Ö½âµ÷-----------------------------
-delay = str2double(get(handles.edit3, 'string'))/1000;                                                  %ĞÅºÅ´«Êä¹ı³ÌµÄÊ±ÑÓ£¨ms×ª»»Îªs£©
+% ------------------------------1bitå·®åˆ†è§£è°ƒ-----------------------------
+delay = str2double(get(handles.edit3, 'string'))/1000;                                                  %ä¿¡å·ä¼ è¾“è¿‡ç¨‹çš„æ—¶å»¶ï¼ˆmsè½¬æ¢ä¸ºsï¼‰
 dt_rcv = dt * 25 * 25;
-ave_dist = sum(sqrt(I_de0.^2 + Q_de0.^2)) / length(I_de0);                  %ÏàÎ»Í¼ÉÏµÄµãµ½Ô­µãµÄÆ½¾ù¾àÀë
-I_de = [2*rand(1, round(delay/dt_rcv))-1, I_de0];                           %³éÈ¡ÂË²¨ºóµÄÍ¬ÏàĞÅºÅ·ÖÁ¿
-Q_de = [2*rand(1, round(delay/dt_rcv))-1, Q_de0];                           %³éÈ¡ÂË²¨ºóµÄÕı½»ĞÅºÅ·ÖÁ¿
-I_de = I_de/ave_dist;                                                       %¹éÒ»»¯
-Q_de = Q_de/ave_dist;                                                       %¹éÒ»»¯
-N_sample_rcv = 8;                                                           %³éÈ¡ÂË²¨ºóµÄÃ¿ÂëÔª²ÉÑùµãÊı
+ave_dist = sum(sqrt(I_de0.^2 + Q_de0.^2)) / length(I_de0);                  %ç›¸ä½å›¾ä¸Šçš„ç‚¹åˆ°åŸç‚¹çš„å¹³å‡è·ç¦»
+I_de = [2*rand(1, round(delay/dt_rcv))-1, I_de0];                           %æŠ½å–æ»¤æ³¢åçš„åŒç›¸ä¿¡å·åˆ†é‡
+Q_de = [2*rand(1, round(delay/dt_rcv))-1, Q_de0];                           %æŠ½å–æ»¤æ³¢åçš„æ­£äº¤ä¿¡å·åˆ†é‡
+I_de = I_de/ave_dist;                                                       %å½’ä¸€åŒ–
+Q_de = Q_de/ave_dist;                                                       %å½’ä¸€åŒ–
+N_sample_rcv = 8;                                                           %æŠ½å–æ»¤æ³¢åçš„æ¯ç å…ƒé‡‡æ ·ç‚¹æ•°
 f_de0 = [zeros(1, N_sample_rcv) I_de(1:end-N_sample_rcv)] .* Q_de -...
-        [zeros(1, N_sample_rcv) Q_de(1:end-N_sample_rcv)] .* I_de;           %1bit²î·Ö·¨ÇóÆµÂÊµã
+        [zeros(1, N_sample_rcv) Q_de(1:end-N_sample_rcv)] .* I_de;           %1bitå·®åˆ†æ³•æ±‚é¢‘ç‡ç‚¹
 
-% ------------------------------Ê±ÑÓ¹À¼Æ-----------------------------
-loc = reshape([zeros(1, 6); zeros(1, 6); ones(1, 6); ones(1, 6)], 1, 24);       %±¾µØÑµÁ·ĞòÁĞ
-loc = 2 * kron(loc, ones(1, N_sample_rcv)) - 1;                                 %ÉÏ²ÉÑù
-[xcorr_data, move_num] = xcorr(f_de0, [zeros(1, 8*N_sample_rcv) loc], 'none');   %Çó±¾µØÑµÁ·ĞòÁĞÓëĞÅºÅµÄ»¥Ïà¹Øº¯Êı
-[~, max_num] = max(xcorr_data);                                                 %»¥Ïà¹Øº¯Êı×î´óÖµÏÂ±ê
-delay_num = move_num(max_num);                                                  %¹À¼ÆÊ±ÑÓµÄ²ÉÑùµãÊı
-delay_est = delay_num * dt_rcv;                                                 %Ê±ÑÓ¹À¼ÆÖµ
+% ------------------------------æ—¶å»¶ä¼°è®¡-----------------------------
+loc = reshape([zeros(1, 6); zeros(1, 6); ones(1, 6); ones(1, 6)], 1, 24);       %æœ¬åœ°è®­ç»ƒåºåˆ—
+loc = 2 * kron(loc, ones(1, N_sample_rcv)) - 1;                                 %ä¸Šé‡‡æ ·
+[xcorr_data, move_num] = xcorr(f_de0, [zeros(1, 8*N_sample_rcv) loc], 'none');   %æ±‚æœ¬åœ°è®­ç»ƒåºåˆ—ä¸ä¿¡å·çš„äº’ç›¸å…³å‡½æ•°
+[~, max_num] = max(xcorr_data);                                                 %äº’ç›¸å…³å‡½æ•°æœ€å¤§å€¼ä¸‹æ ‡
+delay_num = move_num(max_num);                                                  %ä¼°è®¡æ—¶å»¶çš„é‡‡æ ·ç‚¹æ•°
+delay_est = delay_num * dt_rcv;                                                 %æ—¶å»¶ä¼°è®¡å€¼
 f_de = f_de0(delay_num:end);
 
-% ------------------------------³éÑùÅĞ¾ö-----------------------------
+% ------------------------------æŠ½æ ·åˆ¤å†³-----------------------------
 if length(f_de) >= b_num * N_sample_rcv
     f_de = f_de(1:b_num * N_sample_rcv);
 else
     f_de = [f_de f_de(end) * ones(1, b_num*N_sample_rcv-length(f_de))];
 end
-AIS_out = f_de(N_sample_rcv:N_sample_rcv:end) > 0;                      %´óÓÚ0ÅĞÎª1£¬·ñÔòÅĞÎª0
+AIS_out = f_de(N_sample_rcv:N_sample_rcv:end) > 0;                      %å¤§äº0åˆ¤ä¸º1ï¼Œå¦åˆ™åˆ¤ä¸º0
 
-% ------------------------------Êı¾İÌáÈ¡-----------------------------
-%NRZI½âÂë
+% ------------------------------æ•°æ®æå–-----------------------------
+%NRZIè§£ç 
 AIS_out_denrzi = ~xor(AIS_out, [1 AIS_out(1:end-1)]);
 
-%ÌáÈ¡Êı¾İºÍÖ¡Ğ£ÑéĞòÁĞ
-data_out = AIS_out_denrzi(41:end);              %É¾È¥ÉÏÉıÑØ¡¢ÑµÁ·ĞòÁĞ¡¢¿ªÊ¼±êÖ¾
+%æå–æ•°æ®å’Œå¸§æ ¡éªŒåºåˆ—
+data_out = AIS_out_denrzi(41:end);              %åˆ å»ä¸Šå‡æ²¿ã€è®­ç»ƒåºåˆ—ã€å¼€å§‹æ ‡å¿—
 for i = 191:length(data_out)
     if(prod(data_out(i-4:i))==1)
-        k = i - 7;                              %½áÊø±êÖ¾Ç°µÄÏÂ±êÎ»ÖÃ
+        k = i - 7;                              %ç»“æŸæ ‡å¿—å‰çš„ä¸‹æ ‡ä½ç½®
     end
 end
-data_out = data_out(1:k);                       %É¾È¥½áÊø±êÖ¾¼°»º³åÎ»
+data_out = data_out(1:k);                       %åˆ å»ç»“æŸæ ‡å¿—åŠç¼“å†²ä½
 
-%·´Ìî³ä
+%åå¡«å……
 m=[];
 for i = 6:length(data_out)
     if(prod(data_out(i-5:i-1))==1 && data_out(i)==0)
-        m = [m i];                              %´æ´¢Ìî³ä0ÂëµÄÏÂ±êĞÅÏ¢
+        m = [m i];                              %å­˜å‚¨å¡«å……0ç çš„ä¸‹æ ‡ä¿¡æ¯
     end
 end
-data_out(m) = [];                               %É¾È¥Ìî³äµÄ0Âë
+data_out(m) = [];                               %åˆ å»å¡«å……çš„0ç 
 
-% ------------------------------CRCĞ£Ñé-----------------------------
+% ------------------------------CRCæ ¡éªŒ-----------------------------
 global generator
-data_final = data_out(1:168);                   %È¡Êı¾İÎ»
-temp = [data_final zeros(1, 16)];               %½«Êı¾İÎ»ÒÆÎ»
+data_final = data_out(1:168);                   %å–æ•°æ®ä½
+temp = [data_final zeros(1, 16)];               %å°†æ•°æ®ä½ç§»ä½
 [divid_out, remainder_out] = deconv(temp, generator);     
 remainder_out = mod(remainder_out(end-15:end),2);
-if isequal(remainder_out, data_out(169:184))    %ÇóµÃµÄÓàÊ½ÓëĞ£ÑéĞòÁĞ±È½Ï£¬ÈôÏàÍ¬Ôò½âµ÷ÕıÈ·
-    msgbox('½âµ÷ÕıÈ·£¡', 'Success', 'modal');
+if isequal(remainder_out, data_out(169:184))    %æ±‚å¾—çš„ä½™å¼ä¸æ ¡éªŒåºåˆ—æ¯”è¾ƒï¼Œè‹¥ç›¸åŒåˆ™è§£è°ƒæ­£ç¡®
+    msgbox('è§£è°ƒæ­£ç¡®ï¼', 'Success', 'modal');
 else
-    msgbox('½âµ÷´íÎó£¬²úÉúÎóÂë :-(', 'Error', 'error');
+    msgbox('è§£è°ƒé”™è¯¯ï¼Œäº§ç”Ÿè¯¯ç  :-(', 'Error', 'error');
 end
 
 
-% ------------------------------²ÎÊı½âÒë-----------------------------
-para = {'ÏûÏ¢ID', '×ª·¢Ö¸Ê¾·û', 'ÓÃ»§ID', 'µ¼º½×´Ì¬', 'Ğı×ªËÙÂÊ', 'µØÃæº½ËÙ', 'Î»ÖÃ×¼È·¶È',...
-    '¾­¶È', 'Î³¶È', 'µØÃæº½Ïß', 'Êµ¼Êº½Ïò', 'Ê±´Á', 'ÌØ¶¨²Ù×÷Ö¸Ê¾·û', 'RAIM±êÖ¾', 'Í¨ĞÅ×´Ì¬'};
+% ------------------------------å‚æ•°è§£è¯‘-----------------------------
+para = {'æ¶ˆæ¯ID', 'è½¬å‘æŒ‡ç¤ºç¬¦', 'ç”¨æˆ·ID', 'å¯¼èˆªçŠ¶æ€', 'æ—‹è½¬é€Ÿç‡', 'åœ°é¢èˆªé€Ÿ', 'ä½ç½®å‡†ç¡®åº¦',...
+    'ç»åº¦', 'çº¬åº¦', 'åœ°é¢èˆªçº¿', 'å®é™…èˆªå‘', 'æ—¶æˆ³', 'ç‰¹å®šæ“ä½œæŒ‡ç¤ºç¬¦', 'RAIMæ ‡å¿—', 'é€šä¿¡çŠ¶æ€'};
 
-value = struct;  %³õÊ¼»¯½á¹¹Ìåvalue
-%ÏûÏ¢ID
+value = struct;  %åˆå§‹åŒ–ç»“æ„ä½“value
+%æ¶ˆæ¯ID
 if(isequal([1 1 0 0 0 1], data_out(1:6)))
     value.msg_id = '1';
 elseif (isequal([1 1 0 0 1 0], data_out(1:6)))
@@ -233,194 +233,194 @@ else
     value.msg_id = '0';
 end
 
-%×ª·¢Ö¸Ê¾·û£¬±íÃ÷Ä³¸öÏûÏ¢±»×ª·¢ÁË¶àÉÙ´Î
+%è½¬å‘æŒ‡ç¤ºç¬¦ï¼Œè¡¨æ˜æŸä¸ªæ¶ˆæ¯è¢«è½¬å‘äº†å¤šå°‘æ¬¡
  switch 2.^([1 0])*(data_out(7:8))'
      case 0
-         value.retran_ind = 'Ä¬ÈÏ';
+         value.retran_ind = 'é»˜è®¤';
      case 3
-         value.retran_ind = '²»ÔÙ×ª·¢';
+         value.retran_ind = 'ä¸å†è½¬å‘';
      otherwise
          value.retran_ind = num2str(2.^([1 0])*(data_out(7:8))');
  end
  
- %ÓÃ»§ID£¬Î¨Ò»±êÊ¶·û
+ %ç”¨æˆ·IDï¼Œå”¯ä¸€æ ‡è¯†ç¬¦
  value.user_id = num2str(2.^(29:-1:0)*(data_out(9:38))');
  
- %µ¼º½×´Ì¬
+ %å¯¼èˆªçŠ¶æ€
  switch 2.^(3:-1:0)*(data_out(39:42))'
      case 0
-         value.navi_state = '·¢¶¯»úÊ¹ÓÃÖĞ';
+         value.navi_state = 'å‘åŠ¨æœºä½¿ç”¨ä¸­';
      case 1
-         value.navi_state = 'Ãª²´';
+         value.navi_state = 'é”šæ³Š';
      case 2
-         value.navi_state = 'Î´²Ù×İ';
+         value.navi_state = 'æœªæ“çºµ';
      case 3
-         value.navi_state = 'ÓĞÏŞÊÊº½ĞÔ';
+         value.navi_state = 'æœ‰é™é€‚èˆªæ€§';
      case 4
-         value.navi_state = 'ÊÜ´¬²°³ÔË®ÏŞÖÆ';
+         value.navi_state = 'å—èˆ¹èˆ¶åƒæ°´é™åˆ¶';
      case 5
-         value.navi_state = 'Ïµ²´';
+         value.navi_state = 'ç³»æ³Š';
      case 6
-         value.navi_state = '¸éÇ³';
+         value.navi_state = 'ææµ…';
      case 7
-         value.navi_state = '´ÓÊÂ²¶ÀÌ';
+         value.navi_state = 'ä»äº‹æ•æ';
      case 8
-         value.navi_state = 'º½ĞĞÖĞ';
+         value.navi_state = 'èˆªè¡Œä¸­';
      case {9, 10}
-         value.navi_state = 'Áô×ö½«À´ĞŞÕıµ¼º½×´Ì¬';
+         value.navi_state = 'ç•™åšå°†æ¥ä¿®æ­£å¯¼èˆªçŠ¶æ€';
      case {11, 12, 13}
-         value.navi_state = 'Áô×ö½«À´ÓÃ';
+         value.navi_state = 'ç•™åšå°†æ¥ç”¨';
      case 14
          value.navi_state = 'AIS-SART';
      case 15
-         value.navi_state = 'Î´¹æ¶¨';
+         value.navi_state = 'æœªè§„å®š';
  end
  
- %Ğı×ªËÙÂÊROTAIS
+ %æ—‹è½¬é€Ÿç‡ROTAIS
  switch data_out(43)
      case 0
          if(data_out(44:50)==ones(1, 7))
-             value.rotais = 'ÒÔÃ¿30sÓÒĞı³¬¹ı5¶ÈµÄËÙÂÊĞı×ª£¨TI²»¿ÉÓÃ£©';
+             value.rotais = 'ä»¥æ¯30så³æ—‹è¶…è¿‡5åº¦çš„é€Ÿç‡æ—‹è½¬ï¼ˆTIä¸å¯ç”¨ï¼‰';
          else
-             value.rotais = 'Ã¿·ÖÖÓÓÒĞı×î¶à708¶È»ò¸ü¿ì';
+             value.rotais = 'æ¯åˆ†é’Ÿå³æ—‹æœ€å¤š708åº¦æˆ–æ›´å¿«';
          end
      case 1
          if(data_out(44:50)==[0 0 0 0 0 0 1])
-             value.rotais = 'ÒÔÃ¿30s×óĞı³¬¹ı5¶ÈµÄËÙÂÊĞı×ª£¨TI²»¿ÉÓÃ£©';
+             value.rotais = 'ä»¥æ¯30så·¦æ—‹è¶…è¿‡5åº¦çš„é€Ÿç‡æ—‹è½¬ï¼ˆTIä¸å¯ç”¨ï¼‰';
          elseif(data_out(44:50)==zeros(1, 7))
-             value.rotais = 'Ã»ÓĞ¿ÉÓÃµÄĞı×ªĞÅÏ¢';
+             value.rotais = 'æ²¡æœ‰å¯ç”¨çš„æ—‹è½¬ä¿¡æ¯';
          else
-             value.rotais = 'Ã¿·ÖÖÓ×óĞı×î¶à708¶È»ò¸ü¿ì';
+             value.rotais = 'æ¯åˆ†é’Ÿå·¦æ—‹æœ€å¤š708åº¦æˆ–æ›´å¿«';
          end
  end
  
- %µØÃæº½ËÙSOG
+ %åœ°é¢èˆªé€ŸSOG
   switch 2.^(9:-1:0)*(data_out(51:60))'
       case 1023
-          value.sog = '²»¿ÉÓÃ';
+          value.sog = 'ä¸å¯ç”¨';
       otherwise
-          value.sog = [num2str(2.^(9:-1:0)*(data_out(51:60))'/10) '½Ú'];
+          value.sog = [num2str(2.^(9:-1:0)*(data_out(51:60))'/10) 'èŠ‚'];
   end
   
-  %Î»ÖÃ×¼È·¶È
+  %ä½ç½®å‡†ç¡®åº¦
   switch data_out(61)
       case 0
-          value.pa = 'µÍ';
+          value.pa = 'ä½';
       case 1
-          value.pa = '¸ß';
+          value.pa = 'é«˜';
   end
   
-  %¾­¶È
+  %ç»åº¦
   switch data_out(62)
       case 0
           longtitude = 2.^(26:-1:0)*(data_out(63:89))'*60/10000;
-          sec = mod(longtitude, 60);  %Ãë
-          minute = mod(floor(longtitude/60), 60);  %·Ö
-          deg = floor(floor(longtitude/60)/60);  %¶È
+          sec = mod(longtitude, 60);  %ç§’
+          minute = mod(floor(longtitude/60), 60);  %åˆ†
+          deg = floor(floor(longtitude/60)/60);  %åº¦
           if(longtitude < 648000)
-              value.lon = ['¶«¾­' num2str(deg) '¶È' num2str(minute) '·Ö'...
-                        num2str(sec) 'Ãë'];
+              value.lon = ['ä¸œç»' num2str(deg) 'åº¦' num2str(minute) 'åˆ†'...
+                        num2str(sec) 'ç§’'];
           else
-              value.lon = '²»¿ÉÓÃ';
+              value.lon = 'ä¸å¯ç”¨';
           end
       case 1
           longtitude = (2^28 - 1 - ((2.^(27:-1:0)*(data_out(62:89))')-1))*60/10000;
-          sec = mod(longtitude, 60);  %Ãë
-          minute = mod(floor(longtitude/60), 60);  %·Ö
-          deg = floor(floor(longtitude/60)/60);  %¶È
+          sec = mod(longtitude, 60);  %ç§’
+          minute = mod(floor(longtitude/60), 60);  %åˆ†
+          deg = floor(floor(longtitude/60)/60);  %åº¦
           if(longtitude <= 648000)
-              value.lon = ['Î÷¾­' num2str(deg) '¶È' num2str(minute) '·Ö'...
-                        num2str(sec) 'Ãë'];
+              value.lon = ['è¥¿ç»' num2str(deg) 'åº¦' num2str(minute) 'åˆ†'...
+                        num2str(sec) 'ç§’'];
           else
-              value.lon = '²»¿ÉÓÃ';
+              value.lon = 'ä¸å¯ç”¨';
           end
   end
   
-  %Î³¶È
+  %çº¬åº¦
   switch data_out(90)
       case 0
           latitude = 2.^(25:-1:0)*(data_out(91:116))'*60/10000;
-          sec = mod(latitude, 60);  %Ãë
-          minute = mod(floor(latitude/60), 60);  %·Ö
-          deg = floor(floor(latitude/60)/60);  %¶È
+          sec = mod(latitude, 60);  %ç§’
+          minute = mod(floor(latitude/60), 60);  %åˆ†
+          deg = floor(floor(latitude/60)/60);  %åº¦
           if(latitude < 324000)
-              value.la = ['±±Î³' num2str(deg) '¶È' num2str(minute) '·Ö'...
-                        num2str(sec) 'Ãë'];
+              value.la = ['åŒ—çº¬' num2str(deg) 'åº¦' num2str(minute) 'åˆ†'...
+                        num2str(sec) 'ç§’'];
           else
-              value.la = '²»¿ÉÓÃ';
+              value.la = 'ä¸å¯ç”¨';
           end
       case 1
           latitude = (2^27 - 1 - ((2.^(26:-1:0)*(data_out(90:116))')-1))*60/10000;
-          sec = mod(latitude, 60);  %Ãë
-          minute = mod(floor(latitude/60), 60);  %·Ö
-          deg = floor(floor(latitude/60)/60);  %¶È
+          sec = mod(latitude, 60);  %ç§’
+          minute = mod(floor(latitude/60), 60);  %åˆ†
+          deg = floor(floor(latitude/60)/60);  %åº¦
           if(latitude <= 324000)
-              value.la = ['ÄÏÎ³' num2str(deg) '¶È' num2str(minute) '·Ö'...
-                        num2str(sec) 'Ãë'];
+              value.la = ['å—çº¬' num2str(deg) 'åº¦' num2str(minute) 'åˆ†'...
+                        num2str(sec) 'ç§’'];
           else
-              value.la = '²»¿ÉÓÃ';
+              value.la = 'ä¸å¯ç”¨';
           end
   end        
   
-  %µØÃæº½ÏßCOG
+  %åœ°é¢èˆªçº¿COG
   if(2.^(11:-1:0)*(data_out(117:128))' < 3600)
       cog = 2.^(11:-1:0)*(data_out(117:128))'/10;
-      value.cog = [num2str(cog) '¶È'];
+      value.cog = [num2str(cog) 'åº¦'];
   else
-      value.cog = '²»¿ÉÓÃ';
+      value.cog = 'ä¸å¯ç”¨';
   end
   
-  %Êµ¼Êº½Ïò
+  %å®é™…èˆªå‘
   if(2.^(8:-1:0)*(data_out(129:137))' < 360)
       dir = 2.^(8:-1:0)*(data_out(129:137))';
-      value.dir = [num2str(dir) '¶È'];
+      value.dir = [num2str(dir) 'åº¦'];
   else
-      value.dir = '²»¿ÉÓÃ';
+      value.dir = 'ä¸å¯ç”¨';
   end
   
-  %Ê±´Á
+  %æ—¶æˆ³
   switch 2.^(5:-1:0)*(data_out(138:143))'
       case 60
-          value.time = 'Ê±´Á²»¿ÉÓÃ';
+          value.time = 'æ—¶æˆ³ä¸å¯ç”¨';
       case 61
-          value.time = '¶¨Î»ÏµÍ³ÔÚÈË¹¤ÊäÈëÄ£Ê½';
+          value.time = 'å®šä½ç³»ç»Ÿåœ¨äººå·¥è¾“å…¥æ¨¡å¼';
       case 62
-          value.time = 'µç×Ó¶¨Î»ÏµÍ³ÔÚ¹À¼Æ£¨º½¼£ÍÆËã£©Ä£Ê½ÏÂ';
+          value.time = 'ç”µå­å®šä½ç³»ç»Ÿåœ¨ä¼°è®¡ï¼ˆèˆªè¿¹æ¨ç®—ï¼‰æ¨¡å¼ä¸‹';
       case 63
-          value.time = '¶¨Î»ÏµÍ³²»Æğ×÷ÓÃ';
+          value.time = 'å®šä½ç³»ç»Ÿä¸èµ·ä½œç”¨';
       otherwise
           value.time = [num2str(2.^(5:-1:0)*(data_out(138:143))') 's'];
   end
   
-  %ÌØ¶¨²Ù×İÖ¸Ê¾·û
+  %ç‰¹å®šæ“çºµæŒ‡ç¤ºç¬¦
   switch 2.^(1:-1:0)*(data_out(144:145))'
       case 1
-          value.ctrl = 'Î´½øĞĞÌØ¶¨²Ù×İ';
+          value.ctrl = 'æœªè¿›è¡Œç‰¹å®šæ“çºµ';
       case 2
-          value.ctrl = '½øĞĞÌØ¶¨²Ù×İ';
+          value.ctrl = 'è¿›è¡Œç‰¹å®šæ“çºµ';
       otherwise
-          value.ctrl = '²»¿ÉÓÃ';
+          value.ctrl = 'ä¸å¯ç”¨';
   end
   
-  %RAIM±êÖ¾
+  %RAIMæ ‡å¿—
   if(data_out(149) == 0)
-      value.raim = 'RAIMÎ´Ê¹ÓÃ';
+      value.raim = 'RAIMæœªä½¿ç”¨';
   else
-      value.raim = 'RAIMÕıÔÚÊ¹ÓÃ';
+      value.raim = 'RAIMæ­£åœ¨ä½¿ç”¨';
   end
   
-  %Í¨ĞÅ×´Ì¬
+  %é€šä¿¡çŠ¶æ€
   if(isequal([1 1 0 0 0 1], data_out(1:6)))
-      value.tele = 'SOTDMAÍ¨ĞÅ×´Ì¬';
+      value.tele = 'SOTDMAé€šä¿¡çŠ¶æ€';
   elseif (isequal([1 1 0 0 1 0], data_out(1:6)))
-      value.tele = 'SOTDMAÍ¨ĞÅ×´Ì¬';
+      value.tele = 'SOTDMAé€šä¿¡çŠ¶æ€';
   elseif (isequal([1 1 0 0 1 1], data_out(1:6)))
-      value.tele = 'ITDMAÍ¨ĞÅ×´Ì¬';
+      value.tele = 'ITDMAé€šä¿¡çŠ¶æ€';
   else
-      value.tele = 'ÎŞ';
+      value.tele = 'æ— ';
   end
   
-  % ------------------------------ĞÅÏ¢ÏÔÊ¾-----------------------------
+  % ------------------------------ä¿¡æ¯æ˜¾ç¤º-----------------------------
   value = struct2cell(value); 
   str_print = [];
   for i = 1:length(value)
@@ -429,45 +429,45 @@ end
   set(handles.edit4, 'string', str_print)
   
   
-  % ------------------------------²¨ĞÎ»æÖÆ-----------------------------
-%set(handles.text14, 'string', '½âµ÷¹ı³ÌĞÅºÅ²¨ĞÎ');
+  % ------------------------------æ³¢å½¢ç»˜åˆ¶-----------------------------
+%set(handles.text14, 'string', 'è§£è°ƒè¿‡ç¨‹ä¿¡å·æ³¢å½¢');
 axes(handles.axes1);
 plot(1000*t(1:25*25:end), I_de(1:length(t(1:25*25:end))), 'LineWidth', 0.7);  xlim([0 27]);  ylim([-1.5 1.5]);
 set(gca, 'xtick', -inf:inf:inf, 'Ytick', [-1 0 1], 'fontsize', 7);  
-set(handles.text8, 'string', '½âµ÷³öµÄIÂ·');
+set(handles.text8, 'string', 'è§£è°ƒå‡ºçš„Iè·¯');
 axes(handles.axes2);
 plot(1000*t(1:25*25:end), Q_de(1:length(t(1:25*25:end))), 'LineWidth', 0.7);  xlim([0 27]);  ylim([-1.5 1.5]);
 set(gca, 'xtick', -inf:inf:inf, 'Ytick', [-1 0 1], 'fontsize', 7);  
-set(handles.text9, 'string', '½âµ÷³öµÄQÂ·');
+set(handles.text9, 'string', 'è§£è°ƒå‡ºçš„Qè·¯');
 axes(handles.axes3);
 plot(1000*t(1:25*25:end), f_de0(1:length(t(1:25*25:end))), 'LineWidth', 0.7);  xlim([0 27]);  ylim([-1.5 1.5]);
 set(gca, 'xtick', -inf:inf:inf, 'Ytick', [-1 0 1], 'fontsize', 7);  
-set(handles.text10, 'string', '²î·Ö½âµ÷ºó');
+set(handles.text10, 'string', 'å·®åˆ†è§£è°ƒå');
 axes(handles.axes4);
 plot(1000*t(1:25*25:end), f_de, 'LineWidth', 0.7);  xlim([0 27]);  ylim([-1.5 1.5]);
 set(gca, 'xtick', -inf:inf:inf, 'Ytick', [-1 0 1], 'fontsize', 7);  
-set(handles.text11, 'string', 'Ê±ÑÓ¾ÀÕıºó');
+set(handles.text11, 'string', 'æ—¶å»¶çº æ­£å');
 axes(handles.axes5)
 plot(1000*t, kron(AIS_out, ones(1, N_sample)), 'LineWidth', 0.7);  xlim([0 27]);  ylim([-0.2 1.2]);
 set(gca, 'xtick', -inf:inf:inf, 'Ytick', [0 1], 'fontsize', 7);  
-set(handles.text12, 'string', '³éÑùÅĞ¾öºó');
+set(handles.text12, 'string', 'æŠ½æ ·åˆ¤å†³å');
 axes(handles.axes7)
 plot(1000*t, kron(AIS_out_denrzi, ones(1, N_sample)), 'LineWidth', 0.7);  xlim([0 27]);  ylim([-0.2 1.2]);
 set(gca, 'xtick', -inf:inf:inf, 'Ytick', [0 1], 'fontsize', 7);  
-set(handles.text15, 'string', 'NRZI½âÂëºó');
+set(handles.text15, 'string', 'NRZIè§£ç å');
 axes(handles.axes8)
 plot(1000*t(1:length(data_out)*N_sample), kron(data_out, ones(1, N_sample)), 'LineWidth', 0.7);  
 xlim([0 27]);  ylim([-0.2 1.2]);  
 set(gca, 'xtick', -inf:inf:inf, 'Ytick', [0 1], 'fontsize', 7);  
-set(handles.text16, 'string', '·´Ìî³äºó');
+set(handles.text16, 'string', 'åå¡«å……å');
 axes(handles.axes6)
 plot(1000*t(1:168*N_sample), kron(data_out(1:168), ones(1, N_sample)), 'LineWidth', 0.7);  
 xlim([0 27]);  ylim([-0.2 1.2]);
 set(gca, 'Ytick', [0 1], 'Xtick', [0 5 10 15 20 25],  'fontsize', 7);  
-set(handles.text13, 'string', '½âµ÷³öµÄÊı¾İ');
-set(handles.text23, 'string', 'Ê±¼ä/ms');
-set(handles.text21, 'string', ['ÆµÆ«¹À¼ÆÖµ: ', num2str(f_dpl/1000), 'kHz']);
-set(handles.text22, 'string', ['Ê±ÑÓ¹À¼ÆÖµ: ', num2str(1000*delay_est), 'ms']);
+set(handles.text13, 'string', 'è§£è°ƒå‡ºçš„æ•°æ®');
+set(handles.text23, 'string', 'æ—¶é—´/ms');
+set(handles.text21, 'string', ['é¢‘åä¼°è®¡å€¼: ', num2str(f_dpl_est/1000), 'kHz']);
+set(handles.text22, 'string', ['æ—¶å»¶ä¼°è®¡å€¼: ', num2str(1000*delay_est), 'ms']);
 
 function edit1_Callback(hObject, eventdata, handles)
 % hObject    handle to edit1 (see GCBO)
@@ -496,10 +496,10 @@ function pushbutton3_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton3 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-% ------------------------------Éú³ÉĞÅºÅ-----------------------------
-rising_edge = zeros(1, 8);                                   %8bitÉÏÉıÑØ
-training_seq = reshape([zeros(1, 12); ones(1, 12)], 1, 24);  %24bitÑµÁ·ĞòÁĞ¡°0101¡­¡±
-start_flag = [0 ones(1, 6) 0];                               %8bit¿ªÊ¼±êÖ¾£¨01111110£©
+% ------------------------------ç”Ÿæˆä¿¡å·-----------------------------
+rising_edge = zeros(1, 8);                                   %8bitä¸Šå‡æ²¿
+training_seq = reshape([zeros(1, 12); ones(1, 12)], 1, 24);  %24bitè®­ç»ƒåºåˆ—â€œ0101â€¦â€
+start_flag = [0 ones(1, 6) 0];                               %8bitå¼€å§‹æ ‡å¿—ï¼ˆ01111110ï¼‰
 switch get(handles.popupmenu1, 'value')
     case 1
         prefix = [1 1 0 0 0 1];
@@ -508,109 +508,109 @@ switch get(handles.popupmenu1, 'value')
     case 3
         prefix = [1 1 0 0 1 1];
 end
-data_in = [prefix (randsrc(1, 162) + 1) / 2];                %Ëæ»ú²úÉú168bitÊı¾İ
-frame_check = zeros(1, 16);                                  %³õÊ¼»¯Ö¡Ğ£ÑéĞòÁĞ
-end_flag = start_flag;                                       %½áÊø±êÖ¾£¨Óë¿ªÊ¼±êÖ¾ÏàÍ¬£©
-buffer = zeros(1, 24);                                       %24bit»º³åÎ»
+data_in = [prefix (randsrc(1, 162) + 1) / 2];                %éšæœºäº§ç”Ÿ168bitæ•°æ®
+frame_check = zeros(1, 16);                                  %åˆå§‹åŒ–å¸§æ ¡éªŒåºåˆ—
+end_flag = start_flag;                                       %ç»“æŸæ ‡å¿—ï¼ˆä¸å¼€å§‹æ ‡å¿—ç›¸åŒï¼‰
+buffer = zeros(1, 24);                                       %24bitç¼“å†²ä½
 
-% ------------------------------Ìí¼ÓCRCĞ£ÑéÂë-----------------------------
+% ------------------------------æ·»åŠ CRCæ ¡éªŒç -----------------------------
 global generator
-generator = [1 0 0 0 1 0 0 0 0 0 0 1 0 0 0 0 1];  %Éú³É¶àÏîÊ½1+x^5+x^12+x^16
-data = [data_in frame_check];                     %Êı¾İÏò×óÒÆ16Î»£¬ÒÔ¼ÆËãÖ¡Ğ£ÑéĞòÁĞ²¢Ìí¼ÓÔÚÄ©Î²
-[divid, remainder] = deconv(data, generator);     %ÒÆÎ»ºóµÄÊı¾İ³ıÒÔÉú³É¶àÏîÊ½£¬µÃµ½ÉÌºÍÓàÊ½
-remainder = mod(remainder(end-15:end),2);         %È¡ÓàÊ½ºó16Î»²¢Ä£2´¦Àí£¬µÃµ½Ö¡Ğ£ÑéĞòÁĞ
-data(end-15:end) = remainder;                     %½«Ö¡Ğ£ÑéĞòÁĞÌí¼ÓÔÚÊı¾İÄ©Î²
-data_crc = data;                                  %´æ´¢Ìí¼ÓCRCĞ£ÑéÂëºóµÄÊı¾İ
+generator = [1 0 0 0 1 0 0 0 0 0 0 1 0 0 0 0 1];  %ç”Ÿæˆå¤šé¡¹å¼1+x^5+x^12+x^16
+data = [data_in frame_check];                     %æ•°æ®å‘å·¦ç§»16ä½ï¼Œä»¥è®¡ç®—å¸§æ ¡éªŒåºåˆ—å¹¶æ·»åŠ åœ¨æœ«å°¾
+[divid, remainder] = deconv(data, generator);     %ç§»ä½åçš„æ•°æ®é™¤ä»¥ç”Ÿæˆå¤šé¡¹å¼ï¼Œå¾—åˆ°å•†å’Œä½™å¼
+remainder = mod(remainder(end-15:end),2);         %å–ä½™å¼å16ä½å¹¶æ¨¡2å¤„ç†ï¼Œå¾—åˆ°å¸§æ ¡éªŒåºåˆ—
+data(end-15:end) = remainder;                     %å°†å¸§æ ¡éªŒåºåˆ—æ·»åŠ åœ¨æ•°æ®æœ«å°¾
+data_crc = data;                                  %å­˜å‚¨æ·»åŠ CRCæ ¡éªŒç åçš„æ•°æ®
 
-% ------------------------------AISĞÅÏ¢Ö¡-----------------------------
-%±ÈÌØÌî³ä£¨HDLCĞ­Òé£©
+% ------------------------------AISä¿¡æ¯å¸§-----------------------------
+%æ¯”ç‰¹å¡«å……ï¼ˆHDLCåè®®ï¼‰
 i = 5;  n = [];
 while i < length(data)
     if(prod(data(i-4:i))==1)
-        data = [data(1:i) 0 data(i+1:end)];  %ÈôÊı¾İĞòÁĞÖĞ³öÏÖÁ¬Ğø5¸ö1£¬ÔòÔÚºóÃæÌí0
-        n = [n i+1];                         %¼ÇÂ¼Ìî³ä0ÂëµÄÎ»ÖÃ
+        data = [data(1:i) 0 data(i+1:end)];  %è‹¥æ•°æ®åºåˆ—ä¸­å‡ºç°è¿ç»­5ä¸ª1ï¼Œåˆ™åœ¨åé¢æ·»0
+        n = [n i+1];                         %è®°å½•å¡«å……0ç çš„ä½ç½®
     end
     i = i + 1;
 end
 
-AIS0 = [rising_edge training_seq start_flag data end_flag buffer];  %AISĞÅÏ¢Ö¡Æ´½Ó
-AIS1 = AIS0(1:256);                                                 %Ìî³äµÄ0ÂëÕ¼ÓÃ»º³åÎ»
+AIS0 = [rising_edge training_seq start_flag data end_flag buffer];  %AISä¿¡æ¯å¸§æ‹¼æ¥
+AIS1 = AIS0(1:256);                                                 %å¡«å……çš„0ç å ç”¨ç¼“å†²ä½
 
-%NRZI±àÂë
+%NRZIç¼–ç 
 AIS_in = ones(1, 257);
 for i = 2:257
     AIS_in(i) = ~xor(AIS_in(i-1), AIS1(i-1));
 end
 AIS_in = AIS_in(2:end);
 
-% ------------------------------²ÎÊıÉèÖÃ-----------------------------
+% ------------------------------å‚æ•°è®¾ç½®-----------------------------
 global Tb BTb B fc N_sample f_sample b_num dt t I_t Q_t
-Tb = 1/9600;                                        %ÂëÔª¿í¶ÈÎª1/9600s
-BTb = 0.4;                                          %¹éÒ»»¯´ø¿íB*TbÎª0.4
-B = BTb/Tb;                                         %3dB´ø¿í
-fc = 161.975e6;                                     %ÔØ²¨ÆµÂÊÎª161.975MHz
-N_sample = 5000;                                    %Ã¿ÂëÔª²ÉÑùµãÊı
-f_sample = N_sample/Tb;                             %²ÉÑùÆµÂÊÎª64±¶ÂëËÙÂÊ
-b_num = 256;                                        %»ù´øĞÅºÅÎª256¸öÂëÔª
-dt = 1/f_sample;                                    %²ÉÑù¼ä¸ô
-t = 0:dt:b_num*Tb-dt;                               %·ÂÕæÀëÉ¢Ê±¼ä
-data_sample = kron(2*AIS_in-1, ones(1, N_sample));  %ÂëÔªÀ©Õ¹(ÉÏ²ÉÑù)
-alpha = sqrt(log(2))/2/B;                           %¸ßË¹ÂË²¨Æ÷µÄ²ÎÊı
-h = 0.5;                                            %µ÷ÖÆÖ¸ÊıÎª0.5
+Tb = 1/9600;                                        %ç å…ƒå®½åº¦ä¸º1/9600s
+BTb = 0.4;                                          %å½’ä¸€åŒ–å¸¦å®½B*Tbä¸º0.4
+B = BTb/Tb;                                         %3dBå¸¦å®½
+fc = 161.975e6;                                     %è½½æ³¢é¢‘ç‡ä¸º161.975MHz
+N_sample = 5000;                                    %æ¯ç å…ƒé‡‡æ ·ç‚¹æ•°
+f_sample = N_sample/Tb;                             %é‡‡æ ·é¢‘ç‡ä¸º64å€ç é€Ÿç‡
+b_num = 256;                                        %åŸºå¸¦ä¿¡å·ä¸º256ä¸ªç å…ƒ
+dt = 1/f_sample;                                    %é‡‡æ ·é—´éš”
+t = 0:dt:b_num*Tb-dt;                               %ä»¿çœŸç¦»æ•£æ—¶é—´
+data_sample = kron(2*AIS_in-1, ones(1, N_sample));  %ç å…ƒæ‰©å±•(ä¸Šé‡‡æ ·)
+alpha = sqrt(log(2))/2/B;                           %é«˜æ–¯æ»¤æ³¢å™¨çš„å‚æ•°
+h = 0.5;                                            %è°ƒåˆ¶æŒ‡æ•°ä¸º0.5
 
-% ------------------------------¸ßË¹ÂË²¨-----------------------------
-t_gauss = -3*Tb:dt:3*Tb;                                %ÂË²¨Æ÷³å¼¤ÏìÓ¦º¯Êı½Ø¶ÏºóµÄÊ±¼ä·¶Î§
-h_gauss = sqrt(pi)/alpha*exp(-(pi*t_gauss/alpha).^2);   %ÂË²¨Æ÷³å¼¤ÏìÓ¦º¯Êı
-gi = conv(data_sample/Tb, h_gauss) * dt;                %¼ÆËã¾í»ı²úÉú¸ßË¹Âö³åĞÅºÅ
+% ------------------------------é«˜æ–¯æ»¤æ³¢-----------------------------
+t_gauss = -3*Tb:dt:3*Tb;                                %æ»¤æ³¢å™¨å†²æ¿€å“åº”å‡½æ•°æˆªæ–­åçš„æ—¶é—´èŒƒå›´
+h_gauss = sqrt(pi)/alpha*exp(-(pi*t_gauss/alpha).^2);   %æ»¤æ³¢å™¨å†²æ¿€å“åº”å‡½æ•°
+gi = conv(data_sample/Tb, h_gauss) * dt;                %è®¡ç®—å·ç§¯äº§ç”Ÿé«˜æ–¯è„‰å†²ä¿¡å·
 
-% ------------------------------MSKµ÷ÖÆ-----------------------------
-gi = gi(3*N_sample+1:end-3*N_sample)';              %½«¸ßË¹Âö³åĞÅºÅ½ØÈ¡ÔÚ·ÂÕæµÄÊ±¼ä·¶Î§
-phi = pi*h*dt*cumsum(gi)';                          %ÇóºÍ´úÌæ»ı·Ö£¬ÇóÏàÎ»º¯Êı
-I_t = cos(phi);                                     %ĞÅºÅµÄÍ¬Ïà·ÖÁ¿
-Q_t = sin(phi);                                     %ĞÅºÅµÄÕı½»·ÖÁ¿
-gmsk = I_t.*cos(2*pi*fc*t) - Q_t.*sin(2*pi*fc*t);   %GMSKµ÷ÖÆĞÅºÅ
-msgbox('µ÷ÖÆ³É¹¦£¡', 'Success', 'modal');
-set(handles.edit4, 'string', []);                   %Çå¿ÕÏûÏ¢ÄÚÈİ
+% ------------------------------MSKè°ƒåˆ¶-----------------------------
+gi = gi(3*N_sample+1:end-3*N_sample)';              %å°†é«˜æ–¯è„‰å†²ä¿¡å·æˆªå–åœ¨ä»¿çœŸçš„æ—¶é—´èŒƒå›´
+phi = pi*h*dt*cumsum(gi)';                          %æ±‚å’Œä»£æ›¿ç§¯åˆ†ï¼Œæ±‚ç›¸ä½å‡½æ•°
+I_t = cos(phi);                                     %ä¿¡å·çš„åŒç›¸åˆ†é‡
+Q_t = sin(phi);                                     %ä¿¡å·çš„æ­£äº¤åˆ†é‡
+gmsk = I_t.*cos(2*pi*fc*t) - Q_t.*sin(2*pi*fc*t);   %GMSKè°ƒåˆ¶ä¿¡å·
+msgbox('è°ƒåˆ¶æˆåŠŸï¼', 'Success', 'modal');
+set(handles.edit4, 'string', []);                   %æ¸…ç©ºæ¶ˆæ¯å†…å®¹
 
-% ------------------------------²¨ĞÎ»æÖÆ-----------------------------
-%set(handles.text14, 'string', 'µ÷ÖÆ¹ı³ÌĞÅºÅ²¨ĞÎ');
+% ------------------------------æ³¢å½¢ç»˜åˆ¶-----------------------------
+%set(handles.text14, 'string', 'è°ƒåˆ¶è¿‡ç¨‹ä¿¡å·æ³¢å½¢');
 axes(handles.axes1);
 plot(1000*t(1:length(data_in)*N_sample), kron(data_in, ones(1, N_sample)), 'LineWidth', 0.7);  xlim([0 27]);  ylim([-0.2 1.2]);
 set(gca, 'xtick', -inf:inf:inf, 'Ytick', [0 1], 'fontsize', 7);  
-set(handles.text8, 'string', 'Ô­Ê¼Êı¾İ');
+set(handles.text8, 'string', 'åŸå§‹æ•°æ®');
 axes(handles.axes2);
 plot(1000*t(1:length(data_crc)*N_sample), kron(data_crc, ones(1, N_sample)), 'LineWidth', 0.7);  xlim([0 27]);  ylim([-0.2 1.2]);
 set(gca, 'xtick', -inf:inf:inf, 'Ytick', [0 1], 'fontsize', 7);  
-set(handles.text9, 'string', 'CRCĞ£Ñéºó');
+set(handles.text9, 'string', 'CRCæ ¡éªŒå');
 axes(handles.axes3)
 plot(1000*t, kron(AIS1, ones(1, N_sample)), 'LineWidth', 0.7);  xlim([0 27]);  ylim([-0.2 1.2]);
 set(gca, 'xtick', -inf:inf:inf, 'Ytick', [0 1], 'fontsize', 7);  
-set(handles.text10, 'string', 'HDLC´ò°üºó');
+set(handles.text10, 'string', 'HDLCæ‰“åŒ…å');
 axes(handles.axes4)
 plot(1000*t, kron(2*AIS_in-1, ones(1, N_sample)), 'LineWidth', 0.7);  xlim([0 27]);  ylim([-1.3 1.3]);
 set(gca, 'xtick', -inf:inf:inf, 'Ytick', [-1 0 1], 'fontsize', 7);  
-set(handles.text11, 'string', 'NRZI±àÂëºó');
+set(handles.text11, 'string', 'NRZIç¼–ç å');
 axes(handles.axes5)
 plot(1000*t, gi, 'LineWidth', 0.7);  
 xlim([0 27]);  ylim([1.5*min(gi) 1.5*max(gi)]);  set(gca, 'YtickLabel', '0');
 set(gca, 'xtick', -inf:inf:inf, 'Ytick', 0, 'fontsize', 7);  
-set(handles.text12, 'string', '¸ßË¹ÂË²¨ºó');
+set(handles.text12, 'string', 'é«˜æ–¯æ»¤æ³¢å');
 axes(handles.axes7)
 plot(1000*t, I_t, 'LineWidth', 0.7);  
 xlim([0 27]);  ylim([-1.3 1.3]);  
 set(gca, 'xtick', -inf:inf:inf, 'Ytick', [-1 0 1], 'fontsize', 7);  
-set(handles.text15, 'string', 'IÖ§Â·');
+set(handles.text15, 'string', 'Iæ”¯è·¯');
 axes(handles.axes8)
 plot(1000*t, Q_t, 'LineWidth', 0.7);  
 xlim([0 27]);  ylim([-1.3 1.3]);  
 set(gca, 'xtick', -inf:inf:inf, 'Ytick', [-1 0 1], 'fontsize', 7);  
-set(handles.text16, 'string', 'QÖ§Â·');
+set(handles.text16, 'string', 'Qæ”¯è·¯');
 axes(handles.axes6)
 plot(1000*t, gmsk, 'LineWidth', 0.7);  
 xlim([0 27]);  ylim([-1.3 1.3]);
 set(gca, 'Ytick', [-1 0 1], 'Xtick', [0 5 10 15 20 25], 'fontsize', 7);  
-set(handles.text13, 'string', 'GMSKµ÷ÖÆºó');
-set(handles.text23, 'string', 'Ê±¼ä/ms');
+set(handles.text13, 'string', 'GMSKè°ƒåˆ¶å');
+set(handles.text23, 'string', 'æ—¶é—´/ms');
 set(handles.text21, 'string', ' ');
 set(handles.text22, 'string', ' ');
 
